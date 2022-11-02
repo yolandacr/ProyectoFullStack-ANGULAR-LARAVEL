@@ -23,6 +23,7 @@ class PostController extends Controller {
     public function index() {
         $posts = Post::all()->load('category'); //este load saca un objeto extra con todos los datos de la categoria
 
+
         return response()->json([
                     'code' => 200,
                     'status' => 'success',
@@ -31,7 +32,8 @@ class PostController extends Controller {
     }
 
     public function show($id) {
-        $post = Post::find($id)->load('category');
+        $post = Post::find($id)->load('category')
+                               ->load('user');
 
         if (is_object($post)) {
             $data = [
