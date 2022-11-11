@@ -7,12 +7,11 @@ import { Post } from '../../models/post';
 import { global } from '../../services/global';
 
 @Component({
-  selector: 'app-post-new',
-  templateUrl: './post-new.component.html',
-  styleUrls: ['./post-new.component.css'],
+  selector: 'app-post-edit',
+  templateUrl: '../post-new/post-new.component.html',
   providers: [UserService,CategoryService,PostService]
 })
-export class PostNewComponent implements OnInit {
+export class PostEditComponent implements OnInit {
 
   public page_title:string;
   public identity;
@@ -22,10 +21,10 @@ export class PostNewComponent implements OnInit {
   public resetVar = true;
   public status:any;
   public is_edit:boolean;
-  public url:any;
+  public url:string;
 
 
-  public froala_options: Object = {
+   public froala_options: Object = {
     charCounterCount: true,
     language: 'es',
     toolbarButtons: ['bold', 'italic', 'underline', 'paragraphFormat'],
@@ -58,15 +57,18 @@ export class PostNewComponent implements OnInit {
     private _categoryService: CategoryService,
     private _postService: PostService
   ) { 
-    this.page_title = 'Crear una entrada';
+    this.page_title = 'Editar entrada';
     this.identity = this._userService.getIdentity();
     this.token = this._userService.getToken();
-    this.is_edit = false;
+    this.is_edit = true;
+    this.url = global.url;
   }
 
   ngOnInit(): void {
     this.getCategories();
     this.post = new Post(1, this.identity.sub, 1, '', '', '', null);
+    this.getPost();
+
     
   }
 
@@ -89,22 +91,55 @@ export class PostNewComponent implements OnInit {
 }
 
   onSubmit(form:any){
-    this._postService.create(this.token,this.post).subscribe(
+    this._postService.update(this.token,this.post,this.post.id).subscribe(
       response => {
-        if(response.status=="success"){
-            this.post = response.post;
-            this.status = 'success';
-            this._router.navigate(['/inicio']);
+        if(response.status == 'success'){
+          this.status = 'success';
+          //this.post = response.post;
+          //redirigir a la pagina del post
+          this._router.navigate(['/entrada', this.post.id]);
+
         }else{
           this.status = 'error';
         }
 
       },
+
       error => {
-        console.log(error);
         this.status = 'error';
       }
-    );
+
+      );
+  }
+
+
+    getPost(){
+    // Sacar el id del post de la url
+    this._route.params.subscribe(params=>{
+      let id = +params['id'];
+
+      // Petición ajax para sacar los datos
+      this._postService.getPost(id).subscribe(
+        response => {
+          if(response.status=='success'){
+            this.post = response.posts;
+
+            if(this.post.user_id != this.identity.sub){
+              this._router.navigate(['/inicio']);
+            }
+          }else{
+            
+          }
+        },
+        error => {
+          this._router.navigate(['/inicio']);
+        }
+
+      );
+
+    });
+
+    
   }
 
 }

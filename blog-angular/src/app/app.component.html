@@ -15,7 +15,7 @@
           <a class="nav-link" [routerLink]="['/inicio']">Inicio <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item" *ngFor="let category of categories">
-          <a class="nav-link" href="#">{{category.name}}</a>
+          <a class="nav-link" [routerLink]="['categoria', category.id]">{{category.name}}</a>
         </li>
       </ul>
 
@@ -43,7 +43,7 @@
               <a class="dropdown-item" [routerLink]="['/crear-entrada']">Crear entrada</a>
               <a class="dropdown-item" [routerLink]="['/crear-categoria']">Crear categoría</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Mi perfil</a>
+              <a class="dropdown-item" [routerLink]="['/perfil',identity.sub]">Mi perfil</a>
               <a class="dropdown-item" [routerLink]="['/ajustes']">Ajustes</a>
               <a class="dropdown-item" [routerLink]="['/logout/1']">Cerrar sesión</a>
             </div>
@@ -61,7 +61,7 @@
 
   <footer>
     <hr>
-    Máster en Desarrollo Web FullStack con Víctor Robles &copy;
+    Proyecto FullStack realizado por Yolanda Cordero &copy;
     <hr>
   </footer>
 

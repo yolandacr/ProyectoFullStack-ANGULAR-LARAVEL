@@ -30,4 +30,14 @@ export class CategoryService{
 		let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
 		return this._http.get(this.url + 'category', {headers:headers});
 	}
+
+	getCategory(id:any):Observable<any>{
+		let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+		return this._http.get(this.url + 'category/'+ id, {headers:headers});
+	}
+
+	getPosts(id:any):Observable<any>{
+		let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+		return this._http.get(this.url + 'posts/category/' + id, {headers:headers});
+	}
 }

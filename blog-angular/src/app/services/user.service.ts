@@ -47,6 +47,9 @@ export class UserService{
 	}
 
 	update(token:any, user:any): Observable<any>{
+		//Limpiar campo content (editor texto enriquecido) htmlEntities a utf-8
+		user.description = global.htmlEntities(user.description);
+
 		let json = JSON.stringify(user); //Convierto objeto JS a json para poder mandárselo a la API
 		let params = 'json='+json;
 
@@ -79,6 +82,17 @@ export class UserService{
 
 		return this.token;
 
+	}
+
+	getPosts(id:any):Observable<any>{
+		let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+		return this._http.get(this.url + 'posts/user/' + id, {headers:headers});
+	}
+
+
+	getUser(id:any):Observable<any>{
+		let headers = new HttpHeaders().set('Content-Type','application/x-www-form-urlencoded');
+		return this._http.get(this.url + 'user/detail/' + id, {headers:headers});
 	}
 
 
